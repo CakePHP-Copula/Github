@@ -7,10 +7,7 @@ https://github.com/ornicar/php-github-api
 
 1. Clone or download to `plugins/github`
 
-2. Add the vendors
-
-- If you're using git, run `git submodule update --init` from within the plugin
-- If manual install, download the [php-github-api](https://github.com/ornicar/php-github-api) to the `plugins/github/vendors` folder.
+2. Add the [php-github-api](https://github.com/ornicar/php-github-api) vendor to the `vendors/php-github-api` folder.
 
 3. Add your configuration to `database.php` and set it to the model
 
