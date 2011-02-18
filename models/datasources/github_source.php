@@ -9,7 +9,9 @@
  * @version $Id$
  * @copyright 
  **/
-
+App::import('Core', array('Xml', 'HttpSocket'));
+App::import('Vendor', 'Github_HttpClientInterface', array('file' =>'php-github-api'.DS.'HttpClientInterface.php'));
+App::import('Vendor', 'Github_HttpClient', array('file' =>'php-github-api'.DS.'HttpClient.php'));
 class GithubSource extends DataSource {
 
 	/**
@@ -22,7 +24,7 @@ class GithubSource extends DataSource {
 	var $config = array();
 	
 	var $_schema = array(
-		'tweets' => array(
+		'github_sources' => array(
 			'id' => array(
 				'type' => 'integer',
 				'null' => true,
@@ -45,15 +47,16 @@ class GithubSource extends DataSource {
 	);
 	
 	function __construct($config) {
-		$auth = "{$config['login']:{$config['password']}";
+		extract($config);
+		$auth = "$login:$password";
 		$this->connection = new HttpSocket(
-			"http://{}@twitter.com/"
-		);}
+			"http://github.com/"
+		);
 		parent::__construct($config);
 	}
 
 	function describe($model) {
-	 	return $this->_schema['tweets'];
+	 	return $this->_schema['github_sources'];
 	}
 	
 	function listSources() {
@@ -70,5 +73,8 @@ class GithubSource extends DataSource {
 	}
 	
 	function delete($model, $id = null) {
+	}
+	
+	function calculate($model, $id = null) {
 	}
 }
