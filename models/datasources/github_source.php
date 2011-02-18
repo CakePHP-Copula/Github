@@ -10,8 +10,20 @@
  * @copyright 
  **/
 App::import('Core', array('Xml', 'HttpSocket'));
-App::import('Vendor', 'Github_HttpClientInterface', array('file' =>'php-github-api'.DS.'HttpClientInterface.php'));
-App::import('Vendor', 'Github_HttpClient', array('file' =>'php-github-api'.DS.'HttpClient.php'));
+App::import('Vendor', 'Github_Autoloader', array('file' =>'Github'.DS.'Autoloader.php'));
+Github_Autoloader::autoload('Github_ApiInterface');
+Github_Autoloader::autoload('Github_Api');
+Github_Autoloader::autoload('Github_HttpClientInterface');
+Github_Autoloader::autoload('Github_HttpClient');
+Github_Autoloader::autoload('Github_HttpClient_Curl');
+Github_Autoloader::autoload('Github_Client');
+Github_Autoloader::autoload('Github_Api_User');
+Github_Autoloader::autoload('Github_Api_Organization');
+Github_Autoloader::autoload('Github_Api_Issue');
+Github_Autoloader::autoload('Github_Api_Object');
+Github_Autoloader::autoload('Github_Api_Repo');
+Github_Autoloader::autoload('Github_Api_Commit');
+
 class GithubSource extends DataSource {
 
 	/**
@@ -67,6 +79,21 @@ class GithubSource extends DataSource {
 	}
 	
 	function read($model, $queryData = array()) {
+		$github = new Github_Client();
+		$myRepos = $github->getRepoApi()->getUserRepos('ornicar');
+		return $myRepos;
+		$uri = '';
+
+		if (!empty($queryData['conditions']['username']))
+		$uri .= '/' . $queryData['conditions']['username'];
+		
+		if (!empty($queryData['conditions']['project']))
+		$uri .= '/' . $queryData['conditions']['project'];
+		
+		if (!empty($queryData['fields']))
+		$uri .= '/' . $queryData['fields'];
+		
+		return $this->request($uri);
 	}
 	
 	function update($model, $fields = array(), $values = array()) {
