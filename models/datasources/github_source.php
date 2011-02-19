@@ -9,21 +9,6 @@
  * @version $Id$
  * @copyright 
  **/
-App::import('Core', array('Xml', 'HttpSocket'));
-App::import('Vendor', 'Github_Autoloader', array('file' =>'Github'.DS.'Autoloader.php'));
-Github_Autoloader::autoload('Github_ApiInterface');
-Github_Autoloader::autoload('Github_Api');
-Github_Autoloader::autoload('Github_HttpClientInterface');
-Github_Autoloader::autoload('Github_HttpClient');
-Github_Autoloader::autoload('Github_HttpClient_Curl');
-Github_Autoloader::autoload('Github_Client');
-Github_Autoloader::autoload('Github_Api_User');
-Github_Autoloader::autoload('Github_Api_Organization');
-Github_Autoloader::autoload('Github_Api_Issue');
-Github_Autoloader::autoload('Github_Api_Object');
-Github_Autoloader::autoload('Github_Api_Repo');
-Github_Autoloader::autoload('Github_Api_Commit');
-
 class GithubSource extends DataSource {
 
 	/**
@@ -35,21 +20,125 @@ class GithubSource extends DataSource {
 	 */
 	var $config = array();
 	
+	/**
+	 * Reference to github vendor api
+	 *
+	 * @var string
+	 */
+	var $github;
+	
+	// TODO: Relocate to a dedicated schema file
 	var $_schema = array(
-		'github_sources' => array(
-			'id' => array(
+		'repositories' => array(
+			'type' => array(
 				'type' => 'integer',
 				'null' => true,
 				'key' => 'primary',
 				'length' => 11,
 			),
-			'text' => array(
+			'language' => array(
 				'type' => 'string',
 				'null' => true,
 				'key' => 'primary',
 				'length' => 140
 			),
-			'status' => array(
+			'has_downloads' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'url' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'homepage' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'pushed_at' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'created_at' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'fork' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'has_wiki' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'score' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'size' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'private' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'name' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'watchers' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'owner' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'open_issues' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'description' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'forks' => array(
+				'type' => 'string',
+				'null' => true,
+				'key' => 'primary',
+				'length' => 140
+			),
+			'has_issues' => array(
 				'type' => 'string',
 				'null' => true,
 				'key' => 'primary',
@@ -59,11 +148,9 @@ class GithubSource extends DataSource {
 	);
 	
 	function __construct($config) {
-		extract($config);
-		$auth = "$login:$password";
-		$this->connection = new HttpSocket(
-			"http://github.com/"
-		);
+		App::import('Vendor', 'Github_Autoloader', array('file' =>'Github'.DS.'Autoloader.php'));
+		Github_Autoloader::register();
+		$this->github = new Github_Client();
 		parent::__construct($config);
 	}
 
@@ -72,7 +159,7 @@ class GithubSource extends DataSource {
 	}
 	
 	function listSources() {
-		return array();
+		return array_keys($this->_schema);
 	}
 	
 	function create($model, $fields = array(), $values = array()) {
