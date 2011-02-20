@@ -5,9 +5,8 @@
  * [Short Description]
  *
  * @package default
- * @author Dean Sofer
- * @version $Id$
- * @copyright 
+ * @author Dean Sofer, Sam S
+ * @version 0.0.2
  **/
 class GithubSource extends DataSource {
 
@@ -159,7 +158,6 @@ class GithubSource extends DataSource {
 	 *
 	 * @param string $apiNamegit
 	 * @return GithubApiObject
-	 * @author Dean Sofer
 	 */
 	function api($apiName) {
 		if (empty($apiName))
@@ -191,7 +189,6 @@ class GithubSource extends DataSource {
 	 * @param string $model 
 	 * @param string $queryData 
 	 * @return void
-	 * @author Dean Sofer
 	 */
 	function read($model, $queryData = array()) {
 		//debug(array($model, $queryData));
@@ -244,7 +241,6 @@ class GithubSource extends DataSource {
 	 *
 	 * @param string $returnUri The postback location to call DS->getToken() from
 	 * @return string $redirectUri
-	 * @author Dean Sofer
 	 */
 	function tokenUrl($returnUri) {
 		 return "https://github.com/login/oauth/authorize?client_id={$this->config['login']}&redirect_uri={$returnUri}";
@@ -256,7 +252,6 @@ class GithubSource extends DataSource {
 	 * @param string $returnUri 
 	 * @param string $code 
 	 * @return void
-	 * @author Dean Sofer
 	 */
 	function getToken($returnUri = null, $code = null) {
 		App::import('Core', 'HttpSocket');
@@ -284,7 +279,6 @@ class GithubSource extends DataSource {
 	 * @param string $secret 
 	 * @param string $method 
 	 * @return void
-	 * @author Dean Sofer
 	 */
 	function authenticate($username = null, $secret = null, $method = null) {
 		if (!$username)

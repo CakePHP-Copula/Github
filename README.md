@@ -1,4 +1,5 @@
 # CakePHP Github Api Plugin
+**v0.0.2**
 
 Not sure how I'm gonna go about building this. For now I'm creating a datasource wrapper for:
 https://github.com/ornicar/php-github-api
@@ -16,8 +17,8 @@ https://github.com/ornicar/php-github-api
 var $github = array(
 	'datasource' => 'Github.Github',
 	// These are only required for authenticated requests (write-access)
-	'login' => '--Your Github Username--',
-	'password' => '--Your API Token--',
+	'login' => '--Your API Key--',
+	'password' => '--Your API Secret--',
 );
 
 :: my_model.php ::
@@ -29,4 +30,3 @@ var $useDbConfig = 'github';
 
 
 
-version: 0.0.2
