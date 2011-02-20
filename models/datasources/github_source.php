@@ -154,9 +154,17 @@ class GithubSource extends DataSource {
 		parent::__construct($config);
 	}
 	
-	function api($data) {
-		$api = (isset($data['fields'])) ? $data['fields'] : $data;
-		return $this->github->{'get' . Inflector::classify($api) . 'Api'}();
+	/**
+	 * Returns a GithubApiObject based on the name of the api necessary
+	 *
+	 * @param string $apiName
+	 * @return GithubApiObject
+	 * @author Dean Sofer
+	 */
+	function api($apiName) {
+		if (empty($apiName))
+			return false;
+		return $this->github->{"get{$apiName}Api"}();
 	}
 
 	function describe($model) {
@@ -177,7 +185,7 @@ class GithubSource extends DataSource {
 	 * Example:
 	 *	$params = array(
 	 *		'conditions' => array('owner' => 'proloser'), 
-	 *		'fields' => 'repos')
+	 *		'fields' => 'repos') // 'Repo' is also acceptable
 	 *	);
 	 *
 	 * @param string $model 
@@ -186,15 +194,16 @@ class GithubSource extends DataSource {
 	 * @author Dean Sofer
 	 */
 	function read($model, $queryData = array()) {
+		$api = Inflector::classify($queryData['fields']);
 		$data = false;
-		if (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'users') {
-			$data = $this->api($queryData)->search($queryData['conditions']['owner']);
-		} elseif (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'issues') {
-			$data = $this->api($queryData)->getUserRepos($queryData['conditions']['owner']);
-		} elseif (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'commits') {
-			$data = $this->api($queryData)->getUserRepos($queryData['conditions']['owner']);
-		} elseif (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'repos') {
-			$data = $this->api($queryData)->getUserRepos($queryData['conditions']['owner']);
+		if (!empty($queryData['conditions']['owner']) && $api == 'User') {
+			$data = $this->api($api)->search($queryData['conditions']['owner']);
+		} elseif (!empty($queryData['conditions']['owner']) && $api == 'Issue') {
+			$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
+		} elseif (!empty($queryData['conditions']['owner']) && $api == 'User') {
+			$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
+		} elseif (!empty($queryData['conditions']['owner']) && $api == 'Repo') {
+			$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
 		}
 		return $data;
 	}
