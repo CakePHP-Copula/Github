@@ -204,6 +204,13 @@ class GithubSource extends DataSource {
 				}
 				break;
 			case 'Issue':
+				$state = ($queryData['conditions']['state'] !== null) ? $queryData['conditions']['state'] : 'open';
+				if (!empty($queryData['conditions']['owner'])) {
+					$data = $this->api($api)->getList($queryData['conditions']['owner'], $queryData['conditions']['repo'], $state);
+				}
+				break;
+				
+				// getList('ornicar', 'php-github-api', 'open');
 			
 				break;
 			case 'Repo':
@@ -215,9 +222,9 @@ class GithubSource extends DataSource {
 				break;
 			case 'Commit':
 				if (!empty($queryData['conditions']['file']) && !empty($queryData['conditions']['branch'])) {
-					$data = $this->api($api)->getFileCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['owner'], $queryData['conditions']['owner']);
+					$data = $this->api($api)->getFileCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch'], $queryData['conditions']['file']);
 				} elseif (!empty($queryData['conditions']['commit']) && !empty($queryData['conditions']['branch'])) {
-					$data = $this->api($api)->getCommit($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['owner']);
+					$data = $this->api($api)->getCommit($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch'], $queryData['conditions']['commit']);
 				} elseif (!empty($queryData['conditions']['branch'])) {
 					$data = $this->api($api)->getBranchCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch']);
 				}
