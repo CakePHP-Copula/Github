@@ -26,7 +26,70 @@ var $useDbConfig = 'github';
 
 </code></pre>
 
-4. Query Away! Still deciding on the api for this...
+## Commands
+
+There are a variety of options available to you, however some combinations are required (for example 'wiki' requires 'owner' and 'repo')
+You can get an idea what's available to you by reading the [Codaset API Documentation](http://api.codaset.com/docs)
 
 
+### Read: `find('all', $params)`
 
+Conditions:
+
+* owner
+* repo
+
+Fields: pass only one of these at a time as a string
+
+* General
+	* repos
+* User specific (owner required)
+	* repos
+	* followers
+	* followings
+	* friends
+	* bookmarks
+* Repo specific (owner and repo conditions required)
+	* issues
+		
+**Example:**
+<pre><code>$data = $this->Model->find('all', array(
+	'conditions' => array(
+		'owner' => 'cakephp', 
+		'repo' => 'cakephp'
+	),
+	'fields' => 'commits',
+));</code></pre>
+		
+### Update: `save()`
+Bold items are required
+
+**Unfollow a user**
+
+Fields:
+
+* follow => owner
+
+### Create
+Bold items are required
+
+**Create Repo**
+
+Fields:
+
+* **type** => repo
+* **owner** => The owner of the repo owner.
+* **title** => Title of the new repo.
+* description => Description of the repo.
+* state => The state of the repo. Possible values are 'public' (default), 'semi-private' or 'private'.
+* fork => A publicly accessible URL of an external Git repository that will be cloned to create this repo. Example: git://external-domain.com/repository.git
+
+**Follow a user**
+
+Fields:
+
+* **type** => follow
+* **follow** => owner
+	
+### Delete `delete()`
+Bold items are required
