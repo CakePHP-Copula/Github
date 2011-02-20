@@ -157,7 +157,7 @@ class GithubSource extends DataSource {
 	/**
 	 * Returns a GithubApiObject based on the name of the api necessary
 	 *
-	 * @param string $apiName
+	 * @param string $apiNamegit
 	 * @return GithubApiObject
 	 * @author Dean Sofer
 	 */
@@ -196,14 +196,24 @@ class GithubSource extends DataSource {
 	function read($model, $queryData = array()) {
 		$api = Inflector::classify($queryData['fields']);
 		$data = false;
-		if (!empty($queryData['conditions']['owner']) && $api == 'User') {
-			$data = $this->api($api)->search($queryData['conditions']['owner']);
-		} elseif (!empty($queryData['conditions']['owner']) && $api == 'Issue') {
-			$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
-		} elseif (!empty($queryData['conditions']['owner']) && $api == 'User') {
-			$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
-		} elseif (!empty($queryData['conditions']['owner']) && $api == 'Repo') {
-			$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
+		switch ($api) {
+			case 'User':
+				if (!empty($queryData['conditions']['owner'])) {
+					$data = $this->api($api)->show($queryData['conditions']['owner']);
+				}
+				break;
+			case 'Issue':
+			
+				break;
+			case 'Repo':
+				if (!empty($queryData['conditions']['owner'])) {
+					$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
+				} elseif (!empty($queryData['conditions']['search'])) {
+					$data = $this->api($api)->search($queryData['conditions']['search']);	
+				}
+				break;
+			case 'Commit':
+			
 		}
 		return $data;
 	}
@@ -215,5 +225,66 @@ class GithubSource extends DataSource {
 	}
 	
 	function calculate($model, $id = null) {
+	}
+	
+	/**
+	 * Redirect the user to this address
+	 *
+	 * @param string $returnUri The postback location to call DS->getToken() from
+	 * @return string $redirectUri
+	 * @author Dean Sofer
+	 */
+	function tokenUrl($returnUri) {
+		 return "https://github.com/login/oauth/authorize?client_id={$this->config['login']}&redirect_uri={$returnUri}";
+	}
+	
+	/**
+	 * Posts back to github after the user returns from tokenUrl() to retrieve the token
+	 *
+	 * @param string $returnUri 
+	 * @param string $code 
+	 * @return void
+	 * @author Dean Sofer
+	 */
+	function getToken($returnUri = null, $code = null) {
+		App::import('Core', 'HttpSocket');
+		$socket = new HttpSocket();
+		
+		if (empty($returnUri) && isset($_GET['redirect_uri']))
+			$returnUri = $_GET['redirect_uri'];
+		if (empty($code) && isset($_GET['code']))
+			$code = $_GET['code'];
+		
+		$response = $socket->post('https://github.com/login/oauth/access_token', array(
+			'client_id' => $this->config['login'],
+			'redirect_uri' => $returnUri,
+			'client_secret' => $this->config['password'],
+			'code' => $code,
+		));
+		
+		return $response['access_token'];
+	}
+	
+	/**
+	 *  Authenticate with github using a username and password or token
+	 *
+	 * @param string $username 
+	 * @param string $secret 
+	 * @param string $method 
+	 * @return void
+	 * @author Dean Sofer
+	 */
+	function authenticate($username = null, $secret = null, $method = null) {
+		if (!$username)
+			$username = $this->config['login'];
+		if (!$secret && isset($this->config['password']))
+			$secret = $this->config['password'];
+		if (!$secret && isset($_GET))
+			$secret = $this->config['password'];
+		return $this->github->authenticate($username, $secret, $method);
+	}
+	
+	function deAuthenticate() {
+		return $this->github->deAuthenticate();
 	}
 }
