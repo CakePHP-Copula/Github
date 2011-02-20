@@ -23,7 +23,10 @@ var $github = array(
 :: my_model.php ::
 var $useDbConfig = 'github';
 
-version: 0.0.2
 </code></pre>
 
 4. Query Away! Still deciding on the api for this...
+
+
+
+version: 0.0.2
