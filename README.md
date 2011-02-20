@@ -16,12 +16,17 @@ https://github.com/ornicar/php-github-api
 var $github = array(
 	'datasource' => 'Github.Github',
 	// These are only required for authenticated requests (write-access)
-	'login' => '--Your API Key--',
-	'password' => '--Your API Secret--',
+	'login' => '--Your Github Username--',
+	'password' => '--Your API Token--',
 );
 
 :: my_model.php ::
 var $useDbConfig = 'github';
+
 </code></pre>
 
 4. Query Away! Still deciding on the api for this...
+
+
+
+version: 0.0.2

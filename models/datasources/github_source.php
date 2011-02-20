@@ -194,6 +194,7 @@ class GithubSource extends DataSource {
 	 * @author Dean Sofer
 	 */
 	function read($model, $queryData = array()) {
+		//debug(array($model, $queryData));
 		$api = Inflector::classify($queryData['fields']);
 		$data = false;
 		switch ($api) {
@@ -203,7 +204,10 @@ class GithubSource extends DataSource {
 				}
 				break;
 			case 'Issue':
-			
+				$state = ($queryData['conditions']['state'] !== null) ? $queryData['conditions']['state'] : 'open';
+				if (!empty($queryData['conditions']['owner'])) {
+					$data = $this->api($api)->getList($queryData['conditions']['owner'], $queryData['conditions']['repo'], $state);
+				}
 				break;
 			case 'Repo':
 				if (!empty($queryData['conditions']['owner'])) {
@@ -213,6 +217,14 @@ class GithubSource extends DataSource {
 				}
 				break;
 			case 'Commit':
+				if (!empty($queryData['conditions']['file']) && !empty($queryData['conditions']['branch'])) {
+					$data = $this->api($api)->getFileCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch'], $queryData['conditions']['file']);
+				} elseif (!empty($queryData['conditions']['commit']) && !empty($queryData['conditions']['branch'])) {
+					$data = $this->api($api)->getCommit($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch'], $queryData['conditions']['commit']);
+				} elseif (!empty($queryData['conditions']['branch'])) {
+					$data = $this->api($api)->getBranchCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch']);
+				}
+				break;
 			
 		}
 		return $data;
