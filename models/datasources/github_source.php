@@ -153,9 +153,14 @@ class GithubSource extends DataSource {
 		$this->github = new Github_Client();
 		parent::__construct($config);
 	}
+	
+	function api($data) {
+		$api = (isset($data['fields'])) ? $data['fields'] : $data;
+		return $this->github->{'get' . Inflector::classify($api) . 'Api'}();
+	}
 
 	function describe($model) {
-	 	return $this->_schema['github_sources'];
+	 	return $this->_schema['repositories'];
 	}
 	
 	function listSources() {
@@ -165,22 +170,33 @@ class GithubSource extends DataSource {
 	function create($model, $fields = array(), $values = array()) {
 	}
 	
+	/**
+	 * Uses standard find conditions. Use find('all', $params). Since you cannot pull specific fields,
+	 * we will instead use 'fields' to specify what table to pull from.
+	 *
+	 * Example:
+	 *	$params = array(
+	 *		'conditions' => array('owner' => 'proloser'), 
+	 *		'fields' => 'repos')
+	 *	);
+	 *
+	 * @param string $model 
+	 * @param string $queryData 
+	 * @return void
+	 * @author Dean Sofer
+	 */
 	function read($model, $queryData = array()) {
-		$github = new Github_Client();
-		$myRepos = $github->getRepoApi()->getUserRepos('ornicar');
-		return $myRepos;
-		$uri = '';
-
-		if (!empty($queryData['conditions']['username']))
-		$uri .= '/' . $queryData['conditions']['username'];
-		
-		if (!empty($queryData['conditions']['project']))
-		$uri .= '/' . $queryData['conditions']['project'];
-		
-		if (!empty($queryData['fields']))
-		$uri .= '/' . $queryData['fields'];
-		
-		return $this->request($uri);
+		$data = false;
+		if (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'users') {
+			$data = $this->api($queryData)->search($queryData['conditions']['owner']);
+		} elseif (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'issues') {
+			$data = $this->api($queryData)->getUserRepos($queryData['conditions']['owner']);
+		} elseif (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'commits') {
+			$data = $this->api($queryData)->getUserRepos($queryData['conditions']['owner']);
+		} elseif (!empty($queryData['conditions']['owner']) && $queryData['fields'] == 'repos') {
+			$data = $this->api($queryData)->getUserRepos($queryData['conditions']['owner']);
+		}
+		return $data;
 	}
 	
 	function update($model, $fields = array(), $values = array()) {
