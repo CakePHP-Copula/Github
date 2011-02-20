@@ -209,10 +209,6 @@ class GithubSource extends DataSource {
 					$data = $this->api($api)->getList($queryData['conditions']['owner'], $queryData['conditions']['repo'], $state);
 				}
 				break;
-				
-				// getList('ornicar', 'php-github-api', 'open');
-			
-				break;
 			case 'Repo':
 				if (!empty($queryData['conditions']['owner'])) {
 					$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
