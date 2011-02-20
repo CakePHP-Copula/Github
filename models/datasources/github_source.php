@@ -194,6 +194,7 @@ class GithubSource extends DataSource {
 	 * @author Dean Sofer
 	 */
 	function read($model, $queryData = array()) {
+		//debug(array($model, $queryData));
 		$api = Inflector::classify($queryData['fields']);
 		$data = false;
 		switch ($api) {
@@ -213,6 +214,14 @@ class GithubSource extends DataSource {
 				}
 				break;
 			case 'Commit':
+				if (!empty($queryData['conditions']['file']) && !empty($queryData['conditions']['branch'])) {
+					$data = $this->api($api)->getFileCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['owner'], $queryData['conditions']['owner']);
+				} elseif (!empty($queryData['conditions']['commit']) && !empty($queryData['conditions']['branch'])) {
+					$data = $this->api($api)->getCommit($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['owner']);
+				} elseif (!empty($queryData['conditions']['branch'])) {
+					$data = $this->api($api)->getBranchCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch']);
+				}
+				break;
 			
 		}
 		return $data;
