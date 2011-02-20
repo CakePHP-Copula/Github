@@ -206,12 +206,8 @@ class GithubSource extends DataSource {
 			case 'Issue':
 				$state = ($queryData['conditions']['state'] !== null) ? $queryData['conditions']['state'] : 'open';
 				if (!empty($queryData['conditions']['owner'])) {
-					$data = $this->api($api)->show($queryData['conditions']['owner']);
+					$data = $this->api($api)->getList($queryData['conditions']['owner'], $queryData['conditions']['repo'], $state);
 				}
-				break;
-				
-				// getList('ornicar', 'php-github-api', 'open');
-			
 				break;
 			case 'Repo':
 				if (!empty($queryData['conditions']['owner'])) {
