@@ -7,7 +7,9 @@ $config['Apis']['Github']['read'] = array(
 			// required conditions
 			'owner',
 			// optional conditions the api call can take
-			'optional' => array(),
+			'optional' => array(
+				'repo'
+			),
 		),
 	),
 	'followers' => array(),
@@ -15,6 +17,13 @@ $config['Apis']['Github']['read'] = array(
 	'friends' => array(),
 	'bookmarks' => array(),
 	'issues' => array(),
+	'commits' => array(
+		'commits/list' => array(
+			'owner',
+			'repo',
+			'branch',
+		),
+	),
 );
 
 $config['Apis']['Github']['create'] = array(
