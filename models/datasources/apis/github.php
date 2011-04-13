@@ -1,30 +1,14 @@
 <?php
 /**
- * Github DataSource
+ * Github Driver for Apis Source
  * 
- * [Short Description]
+ * Makes usage of the Apis plugin by Proloser
  *
- * @package default
+ * @package Github Datasource
  * @author Dean Sofer, Sam S
- * @version 0.0.2
+ * @version 0.0.3
  **/
-class GithubSource extends DataSource {
-
-	/**
-	 * Array containing the names of components this component uses. Component names
-	 * should not contain the "Component" portion of the classname.
-	 *
-	 * @var array
-	 * @access public
-	 */
-	var $config = array();
-	
-	/**
-	 * Reference to github vendor api
-	 *
-	 * @var string
-	 */
-	var $github;
+class Github extends ApisSource {
 	
 	// TODO: Relocate to a dedicated schema file
 	var $_schema = array(
@@ -145,96 +129,6 @@ class GithubSource extends DataSource {
 			),
 		)
 	);
-	
-	function __construct($config) {
-		App::import('Vendor', 'Github_Autoloader', array('file' =>'Github'.DS.'Autoloader.php'));
-		Github_Autoloader::register();
-		$this->github = new Github_Client();
-		parent::__construct($config);
-	}
-	
-	/**
-	 * Returns a GithubApiObject based on the name of the api necessary
-	 *
-	 * @param string $apiNamegit
-	 * @return GithubApiObject
-	 */
-	function api($apiName) {
-		if (empty($apiName))
-			return false;
-		return $this->github->{"get{$apiName}Api"}();
-	}
-
-	function describe($model) {
-	 	return $this->_schema['repositories'];
-	}
-	
-	function listSources() {
-		return array_keys($this->_schema);
-	}
-	
-	function create($model, $fields = array(), $values = array()) {
-	}
-	
-	/**
-	 * Uses standard find conditions. Use find('all', $params). Since you cannot pull specific fields,
-	 * we will instead use 'fields' to specify what table to pull from.
-	 *
-	 * Example:
-	 *	$params = array(
-	 *		'conditions' => array('owner' => 'proloser'), 
-	 *		'fields' => 'repos') // 'Repo' is also acceptable
-	 *	);
-	 *
-	 * @param string $model 
-	 * @param string $queryData 
-	 * @return void
-	 */
-	function read($model, $queryData = array()) {
-		//debug(array($model, $queryData));
-		$api = Inflector::classify($queryData['fields']);
-		$data = false;
-		switch ($api) {
-			case 'User':
-				if (!empty($queryData['conditions']['owner'])) {
-					$data = $this->api($api)->show($queryData['conditions']['owner']);
-				}
-				break;
-			case 'Issue':
-				$state = ($queryData['conditions']['state'] !== null) ? $queryData['conditions']['state'] : 'open';
-				if (!empty($queryData['conditions']['owner'])) {
-					$data = $this->api($api)->getList($queryData['conditions']['owner'], $queryData['conditions']['repo'], $state);
-				}
-				break;
-			case 'Repo':
-				if (!empty($queryData['conditions']['owner'])) {
-					$data = $this->api($api)->getUserRepos($queryData['conditions']['owner']);
-				} elseif (!empty($queryData['conditions']['search'])) {
-					$data = $this->api($api)->search($queryData['conditions']['search']);	
-				}
-				break;
-			case 'Commit':
-				if (!empty($queryData['conditions']['file']) && !empty($queryData['conditions']['branch'])) {
-					$data = $this->api($api)->getFileCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch'], $queryData['conditions']['file']);
-				} elseif (!empty($queryData['conditions']['commit']) && !empty($queryData['conditions']['branch'])) {
-					$data = $this->api($api)->getCommit($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch'], $queryData['conditions']['commit']);
-				} elseif (!empty($queryData['conditions']['branch'])) {
-					$data = $this->api($api)->getBranchCommits($queryData['conditions']['owner'], $queryData['conditions']['repo'], $queryData['conditions']['branch']);
-				}
-				break;
-			
-		}
-		return $data;
-	}
-	
-	function update($model, $fields = array(), $values = array()) {
-	}
-	
-	function delete($model, $id = null) {
-	}
-	
-	function calculate($model, $id = null) {
-	}
 	
 	/**
 	 * Redirect the user to this address

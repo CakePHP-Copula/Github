@@ -1,5 +1,5 @@
 # CakePHP Github Api Plugin
-**v0.0.2**
+**v0.0.3**
 
 Not sure how I'm gonna go about building this. For now I'm creating a datasource wrapper for:
 https://github.com/ornicar/php-github-api
