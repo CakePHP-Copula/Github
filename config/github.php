@@ -11,6 +11,13 @@ $config['Apis']['Github']['read'] = array(
 				'repo'
 			),
 		),
+		'repos/search' => array(
+			'seach',
+			'optional' => array(
+				'start_page',
+				'language',
+			)
+		),
 	),
 	'followers' => array(),
 	'followings' => array(),
@@ -27,10 +34,45 @@ $config['Apis']['Github']['read'] = array(
 );
 
 $config['Apis']['Github']['create'] = array(
+	'repos' => array(
+		'repos/fork' => array(
+			'owner',
+			'repo',
+		),
+		'repos/create' => array(
+			'name',
+			'optional' => array(
+				'description',
+				'homepage',
+				'public',
+			),
+		),
+	),
 );
 
 $config['Apis']['Github']['update'] = array(
+	'repos' => array(
+		'repos/set/private' => array(
+			'private',
+			'owner',
+			'repo',
+		),
+		'repos/set/public' => array(
+			'public',
+			'owner',
+			'repo',
+		),
+	)
 );
 
 $config['Apis']['Github']['delete'] = array(
+	'repos' => array(
+		'repos/delete' => array(
+			'owner',
+			'repo',
+			'optional' => array(
+				'delete_token',
+			),
+		),
+	),
 );
