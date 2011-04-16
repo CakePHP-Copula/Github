@@ -23,7 +23,31 @@ $config['Apis']['Github']['read'] = array(
 	'followings' => array(),
 	'friends' => array(),
 	'bookmarks' => array(),
-	'issues' => array(),
+	'issues' => array(
+		'issues/search' => array(
+			'owner',
+			'repo',
+			'state',
+			'search',
+		),
+		'issues/show' => array(
+			'owner',
+			'repo',
+			'number',
+		),
+		'issues/list' => array(
+			'owner',
+			'repo',
+			'state',
+		),
+	),
+	'comments' => array(
+		'issues/comments' => array(
+			'owner',
+			'repo',
+			'number',
+		)
+	),
 	'commits' => array(
 		'commits/list' => array(
 			'owner',
@@ -48,6 +72,14 @@ $config['Apis']['Github']['create'] = array(
 			),
 		),
 	),
+	'issues' => array(
+		'issues/open' => array(
+			'user',
+			'repo',
+			'title',
+			'body',
+		)
+	)
 );
 
 $config['Apis']['Github']['update'] = array(
