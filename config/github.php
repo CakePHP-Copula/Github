@@ -1,4 +1,17 @@
 <?php
+
+$config['Apis']['Github']['hosts'] = array(
+	'oauth' => 'github.com/login/oauth/',
+	'rest' => 'github.com/v2/:format/',
+);
+// http://developer.linkedin.com/docs/DOC-1251
+$config['Apis']['Github']['oauth'] = array(
+	'authorize' => 'authorize', // Example URI: api.linkedin.com/uas/oauth/authorize
+	'request' => 'requestToken', //client_id={$this->config['login']}&redirect_uri
+	'access' => 'access_token', 
+	'login' => 'authenticate', // Like authorize, just auto-redirects
+	'logout' => 'invalidateToken', 
+);
 $config['Apis']['Github']['read'] = array(
 	// field
 	'repos' => array(		
