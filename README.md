@@ -19,6 +19,7 @@ var $github = array(
 	// These are only required for authenticated requests (write-access)
 	'login' => '--Your API Key--',
 	'password' => '--Your API Secret--',
+	'scope' => 'user,public_repo,repo,gist' // Optional comma-separated list. Read up here: http://developer.github.com/v3/oauth/#scopes
 );
 
 :: my_model.php ::
@@ -53,13 +54,15 @@ Fields: pass only one of these at a time as a string
 	* issues
 		
 **Example:**
-<pre><code>$data = $this->Model->find('all', array(
+```
+$data = $this->Model->find('all', array(
 	'conditions' => array(
 		'owner' => 'cakephp', 
 		'repo' => 'cakephp'
 	),
 	'fields' => 'commits',
-));</code></pre>
+));
+```
 		
 ### Update: `save()`
 Bold items are required

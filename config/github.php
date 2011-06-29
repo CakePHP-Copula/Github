@@ -1,12 +1,19 @@
 <?php
-
+/**
+ * A Github API Method Map
+ *
+ * Refer to the apis plugin for how to build a method map
+ * https://github.com/ProLoser/CakePHP-Api-Datasources
+ *
+ */
 $config['Apis']['Github']['hosts'] = array(
-	'oauth' => 'github.com/login/oauth/',
-	'rest' => 'github.com/v2/:format/',
+	'oauth' => 'github.com/login/oauth',
+	'rest' => 'api.github.com',
 );
-// http://developer.linkedin.com/docs/DOC-1251
+// http://developer.github.com/v3/oauth/
 $config['Apis']['Github']['oauth'] = array(
-	'authorize' => 'authorize', // Example URI: api.linkedin.com/uas/oauth/authorize
+	'version' => '2.0',
+	'authorize' => 'authorize', // Example URI: https://github.com/login/oauth/authorize
 	'request' => 'requestToken', //client_id={$this->config['login']}&redirect_uri
 	'access' => 'access_token', 
 	'login' => 'authenticate', // Like authorize, just auto-redirects
@@ -14,11 +21,23 @@ $config['Apis']['Github']['oauth'] = array(
 );
 $config['Apis']['Github']['read'] = array(
 	// field
-	'repos' => array(		
+	'repos' => array(	
+		'repos/:user/:repo' => array(
+			'user',
+			'repo',
+		),
 		// api url
-		'repos/show' => array(			
+		'user/:user/repos' => array(			
 			// required conditions
-			'owner',
+			'user',
+			// optional conditions the api call can take
+			'optional' => array(
+				'type' // all*, public, private -- *default
+			),
+		),
+		'orgs/:org/repos' => array(			
+			// required conditions
+			'org',
 			// optional conditions the api call can take
 			'optional' => array(
 				'repo'
@@ -30,6 +49,9 @@ $config['Apis']['Github']['read'] = array(
 				'start_page',
 				'language',
 			)
+		),
+		'user/repos' => array(
+			
 		),
 	),
 	'followers' => array(),
