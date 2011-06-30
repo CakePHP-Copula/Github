@@ -27,7 +27,7 @@ $config['Apis']['Github']['read'] = array(
 			'repo',
 		),
 		// api url
-		'user/:user/repos' => array(			
+		'users/:user/repos' => array(			
 			// required conditions
 			'user',
 			// optional conditions the api call can take
