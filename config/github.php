@@ -84,10 +84,13 @@ $config['Apis']['Github']['read'] = array(
 		)
 	),
 	'commits' => array(
-		'commits/list' => array(
-			'owner',
+		'repos/:user/:repo/commits' => array(
+			'user',
 			'repo',
-			'branch',
+			'optional' => array(
+				'sha',
+				'path',
+			),
 		),
 	),
 );

@@ -161,8 +161,8 @@ class Github extends ApisSource {
 		return parent::read($model, $queryData);
 	}
 	
-	public function request(&$model) {
-		$model->request['uri']['scheme'] = 'https';
-		return parent::request($model);
+	public function beforeRequest(&$model, $request) {
+		$request['uri']['scheme'] = 'https';
+		return $request;
 	}
 }
