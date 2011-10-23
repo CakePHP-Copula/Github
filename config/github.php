@@ -51,7 +51,9 @@ $config['Apis']['Github']['read'] = array(
 			)
 		),
 		'user/repos' => array(
-			
+			'optional' => array(
+				'type',
+			),
 		),
 	),
 	'followers' => array(),

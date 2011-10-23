@@ -161,8 +161,17 @@ class Github extends ApisSource {
 		return parent::read($model, $queryData);
 	}
 	
+	/**
+	 * Supplement the request object with github-specific data
+	 *
+	 * @param array $request 
+	 * @return array $response
+	 */
 	public function beforeRequest(&$model, $request) {
 		$request['uri']['scheme'] = 'https';
+		// Attempted fix for 3.0
+		if (strtoupper($request['method']) == 'GET' && !empty($this->config['access_token']))
+			$request['uri']['query']['access_token'] = $this->config['access_token'];
 		return $request;
 	}
 }
