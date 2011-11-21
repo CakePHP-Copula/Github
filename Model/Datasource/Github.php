@@ -8,6 +8,7 @@
  * @author Dean Sofer, Sam S
  * @version 0.0.3
  **/
+App::uses('ApisSource', 'Apis.Model/Datasource');
 class Github extends ApisSource {
 	
 	// TODO: Relocate to a dedicated schema file
