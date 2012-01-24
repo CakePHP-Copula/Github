@@ -1,16 +1,10 @@
 # CakePHP Github Api Plugin
-**v0.0.3**
-
-Not sure how I'm gonna go about building this. For now I'm creating a datasource wrapper for:
-https://github.com/ornicar/php-github-api
 
 ## Installation
 
-1. Clone or download to `plugins/github`
+1. Clone or download to `Plugin/Github`
 
-2. Add the [php-github-api](https://github.com/ornicar/php-github-api) vendor to the `vendors/Github` folder. (using the apis autoloader)
-
-3. Add your configuration to `database.php` and set it to the model
+2. Add your configuration to `database.php` and set it to the model
 
 <pre><code>
 :: database.php ::
