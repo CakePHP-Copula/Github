@@ -32,7 +32,7 @@ $config['Apis']['Github']['read'] = array(
 			'user',
 			// optional conditions the api call can take
 			'optional' => array(
-				'type' // all*, public, private -- *default
+				'type' // all, owner, member. Default: public
 			),
 		),
 		'orgs/:org/repos' => array(			
@@ -40,7 +40,7 @@ $config['Apis']['Github']['read'] = array(
 			'org',
 			// optional conditions the api call can take
 			'optional' => array(
-				'repo'
+				'repo' // all, public, member. Default: all
 			),
 		),
 		'repos/search' => array(
@@ -52,7 +52,7 @@ $config['Apis']['Github']['read'] = array(
 		),
 		'user/repos' => array(
 			'optional' => array(
-				'type',
+				'type', // all, owner, public, private, member. Default: all
 			),
 		),
 	),
@@ -72,7 +72,7 @@ $config['Apis']['Github']['read'] = array(
 			'repo',
 			'number',
 		),
-		'issues/list' => array(
+		'issues' => array(
 			'owner',
 			'repo',
 			'state',
@@ -82,7 +82,14 @@ $config['Apis']['Github']['read'] = array(
 		'issues/comments' => array(
 			'owner',
 			'repo',
-			'number',
+			'number', // id of issue
+		)
+	),
+	'comment' => array( // singular for reading single comment
+		'issues/comments' => array(
+			'owner',
+			'repo',
+			'number', // id of comment
 		)
 	),
 	'commits' => array(
@@ -103,23 +110,40 @@ $config['Apis']['Github']['create'] = array(
 			'owner',
 			'repo',
 		),
-		'repos/create' => array(
+		'user/repos' => array(
 			'name',
 			'optional' => array(
 				'description',
 				'homepage',
-				'public',
+				'private',
+				'has_issues', // boolean
+				'has_wiki', // boolean
+				'has_downloads', // boolean
+				'team_id', // number
 			),
 		),
 	),
 	'issues' => array(
-		'issues/open' => array(
+		'repos/:user/:repo/issues' => array(
 			'user',
 			'repo',
 			'title',
-			'body',
+			'optional' => array(
+				'body',
+				'assignee', // string
+				'milestone', // number
+				'labels', // array of strings
+			),
 		)
-	)
+	),
+	'comments' => array(
+		'repos/:user/:repo/issues/:id/comments' => array(
+			'user',
+			'repo',
+			'id',
+			'body', // content of comment
+		),
+	),
 );
 
 $config['Apis']['Github']['update'] = array(
@@ -134,7 +158,22 @@ $config['Apis']['Github']['update'] = array(
 			'owner',
 			'repo',
 		),
-	)
+	),
+	'issues' => array(
+		'repos/:user/:repo/issues/:id' => array(
+			'user',
+			'repo',
+			'id', // issue id
+			'optional' => array(
+				'title',
+				'body',
+				'assignee',
+				'state',
+				'milestone', // number
+				'labels', // array of strings
+			),
+		),
+	),
 );
 
 $config['Apis']['Github']['delete'] = array(
