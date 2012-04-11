@@ -2,30 +2,14 @@
 
 ## Installation
 
-1. Clone or download to `Plugin/Github`
+This plugin depends on the [ApisDatasource](https://github.com/ProLoser/CakePHP-Api-Datasources). Refer to the instructions found there.
 
-2. Add your configuration to `database.php` and set it to the model
+## Commands (unfinished)
 
-<pre><code>
-:: database.php ::
-var $github = array(
-	'datasource' => 'Github.Github',
-	// These are only required for authenticated requests (write-access)
-	'login' => '--Your API Key--',
-	'password' => '--Your API Secret--',
-	'scope' => 'user,public_repo,repo,gist' // Optional comma-separated list. Read up here: http://developer.github.com/v3/oauth/#scopes
-);
-
-:: my_model.php ::
-var $useDbConfig = 'github';
-
-</code></pre>
-
-## Commands
-
-There are a variety of options available to you, however some combinations are required (for example 'wiki' requires 'owner' and 'repo')
-You can get an idea what's available to you by reading the [Codaset API Documentation](http://api.codaset.com/docs)
-
+To see what is available to you, it is best if you refer to the 
+[map file](https://github.com/ProLoser/CakePHP-Github/blob/master/Config/Github.php) for an up-to-date list, in addition 
+to the original [API Documentation](http://developer.github.com/). There are a variety of options available to you, 
+however some combinations are required (for example 'issues' requires 'owner' and 'repo').
 
 ### Read: `find('all', $params)`
 
