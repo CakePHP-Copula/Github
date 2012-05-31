@@ -56,6 +56,12 @@ $config['Apis']['Github']['read'] = array(
 			),
 		),
 	),
+	'users' => array(
+		'user/:user' => array(
+			'user',
+		),
+		'user' => array(),
+	),
 	'followers' => array(),
 	'followings' => array(),
 	'friends' => array(),
@@ -147,6 +153,19 @@ $config['Apis']['Github']['create'] = array(
 );
 
 $config['Apis']['Github']['update'] = array(
+	'users' => array(
+		'user' => array(
+			'optional' => array(
+				'name', // string
+				'email', // string - Publicly visible email address.
+				'blog', // string
+				'company', // string
+				'location', // string
+				'hireable', // boolean
+				'bio', // string'
+			)
+		),
+	),
 	'repos' => array(
 		'repos/set/private' => array(
 			'private',
