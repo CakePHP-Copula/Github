@@ -1,7 +1,7 @@
 <?php
 /**
  * Github Driver for Apis Source
- * 
+ *
  * Makes usage of the Apis plugin by Proloser
  *
  * @package Github Datasource
@@ -10,7 +10,7 @@
  **/
 App::uses('ApisSource', 'Apis.Model/Datasource');
 class Github extends ApisSource {
-	
+
 	// TODO: Relocate to a dedicated schema file
 	var $_schema = array(
 		'repositories' => array(
@@ -130,30 +130,19 @@ class Github extends ApisSource {
 			),
 		)
 	);
-	
+
 	/**
 	 * The description of this data source
 	 *
 	 * @var string
 	 */
 	public $description = 'Github DataSource Driver';
-	
-	/**
-	 * Set the datasource to use OAuth
-	 *
-	 * @param array $config
-	 * @param HttpSocket $Http
-	 */
-	public function __construct($config) {
-		$config['method'] = 'OAuthV2';
-		parent::__construct($config);
-	}
-	
+
 	/**
 	 * Stores the queryData so that the tokens can be substituted just before requesting
 	 *
-	 * @param string $model 
-	 * @param string $queryData 
+	 * @param string $model
+	 * @param string $queryData
 	 * @return mixed $data
 	 * @author Dean Sofer
 	 */
@@ -161,11 +150,11 @@ class Github extends ApisSource {
 		$this->tokens = $queryData['conditions'];
 		return parent::read($model, $queryData);
 	}
-	
+
 	/**
 	 * Supplement the request object with github-specific data
 	 *
-	 * @param array $request 
+	 * @param array $request
 	 * @return array $response
 	 */
 	public function beforeRequest(&$model, $request) {
